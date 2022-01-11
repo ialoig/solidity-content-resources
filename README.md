@@ -1,6 +1,5 @@
 
-# 📝 Solidity Learning Notes
-
+# 📝 Solidity Content & Resources 
 # 📚 Documentation
 
 📕 Read the docs: https://docs.soliditylang.org
