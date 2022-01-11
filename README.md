@@ -1,10 +1,10 @@
 
-# 📝 Solidity Content & Resources 
-# 📚 Documentation
+# 📚 Solidity Content & Resources 
+# 📝 Documentation
 
 📕 Read the docs: https://docs.soliditylang.org
 
-📚 [Solidity by example](https://solidity-by-example.org)
+📙 [Solidity by example](https://solidity-by-example.org)
 
 - [Primitive Data Types](https://solidity-by-example.org/primitives/)
 - [Mappings](https://solidity-by-example.org/mapping/)
