@@ -17,5 +17,24 @@
 
 
 # 💡 Helpful Resources
-- 🧟 [Crypto Zombies](https://cryptozombies.io/)
-- 🦄 [Buildspace](https://buildspace.so/)
+> 🧟 [Crypto Zombies](https://cryptozombies.io/)
+
+> 🦄 [Buildspace](https://buildspace.so/)
+
+
+
+# 🧐 What's inside?
+
+A quick look at the top-level files and directories you'll see here:
+
+> 📁 contract-samples
+
+Samples of Solidity contracts projects from around the Blockchain
+
+> 📁 harhat
+
+Hardhat instructions to configure a project.
+
+> 📁 solidity
+
+Learning notes about Solidity
