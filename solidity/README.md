@@ -540,7 +540,7 @@ So 1 minutes is 60, 1 hours is 3600 (60 seconds x 60 minutes), 1 days is 86400 (
 
 Here's an example of how these time units can be useful:
 
-```shel
+```shell
 uint lastUpdated;
 
 // Set `lastUpdated` to `now`
