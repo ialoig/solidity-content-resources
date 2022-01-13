@@ -130,6 +130,7 @@ mapping (address => uint) public accountBalance;
 // Or could be used to store / lookup usernames based on userId
 mapping (uint => string) userIdToName;
 ```
+
 A mapping is essentially a `key-value` store for storing and looking up data. In the first example, the key is an address and the value is a uint, and in the second example the key is a uint and the value a string.
 
 ## msg.sender
@@ -462,70 +463,74 @@ function driveCar(uint _userId) public olderThan(16, _userId) {
 ```
 You can see here that the `olderThan` modifier takes arguments just like a function does. And that the `driveCar` function passes its arguments to the modifier.
 
+## The payable Modifier
+`payable` functions are part of what makes Solidity and Ethereum so cool — they are a special type of function that can receive Ether.
 
-# ⛽ Gas
+Let that sink in for a minute. When you call an API function on a normal web server, you can't send US dollars along with your function call — nor can you send Bitcoin.
 
+But in Ethereum, because both the money (**Ether**), the data (**transaction payload**), and the contract code itself all live on Ethereum, it's possible for you to call a function and pay money to the contract at the same time.
 
-## Gas — the fuel Ethereum DApps run on
-In Solidity, your users have to pay every time they execute a function on your DApp using a currency called `gas`. Users buy gas with Ether (the currency on Ethereum), so your users have to spend ETH in order to execute functions on your DApp.
+This allows for some really interesting logic, like requiring a certain payment to the contract in order to execute a function.
 
-How much gas is required to execute a function depends on how complex that function's logic is. Each individual operation has a `gas cost` based roughly on how much computing resources will be required to perform that operation (e.g. writing to storage is much more expensive than adding two integers).
-The total `gas cost` of your function is the sum of the gas costs of all its individual operations.
+Let's look at an example
 
-Because running functions costs real money for your users, code optimization is much more important in Ethereum than in other programming languages. If your code is sloppy, your users are going to have to pay a premium to execute your functions — and this could add up to millions of dollars in unnecessary fees across thousands of users.
-
-## Why is gas necessary?
-Ethereum is like a big, slow, but extremely secure computer. When you execute a function, every single node on the network needs to run that same function to verify its output — thousands of nodes verifying every function execution is what makes Ethereum decentralized, and its data immutable and censorship-resistant.
-
-The creators of Ethereum wanted to make sure someone couldn't clog up the network with an infinite loop, or hog all the network resources with really intensive computations. So they made it so transactions aren't free, and users have to pay for computation time as well as storage.
-
-> Note: This isn't necessarily true for other blockchain, like the ones the CryptoZombies authors are building at Loom Network. It probably won't ever make sense to run a game like World of Warcraft directly on the Ethereum mainnet — the gas costs would be prohibitively expensive. But it could run on a blockchain with a different consensus algorithm. We'll talk more about what types of DApps you would want to deploy on Loom vs the Ethereum mainnet in a future lesson.
-
-## Struct packing to save gas
-In Solidity there are other types of uints: uint8, uint16, uint32, etc.
-
-Normally there's no benefit to using these sub-types because Solidity reserves 256 bits of storage regardless of the uint size. For example, using uint8 instead of uint (uint256) won't save you any gas.
-
-But there's an exception to this: inside structs.
-
-If you have multiple uints inside a struct, using a smaller-sized uint when possible will allow Solidity to pack these variables together to take up less storage. For example:
 
 ```shell
-struct NormalStruct {
-  uint a;
-  uint b;
-  uint c;
+contract OnlineStore {
+  function buySomething() external payable {
+    // Check to make sure 0.001 ether was sent to the function call:
+    require(msg.value == 0.001 ether);
+    // If so, some logic to transfer the digital item to the caller of the function:
+    transferThing(msg.sender);
+  }
 }
-
-struct MiniMe {
-  uint32 a;
-  uint32 b;
-  uint c;
-}
-
-// `mini` will cost less gas than `normal` because of struct packing
-NormalStruct normal = NormalStruct(10, 20, 30);
-MiniMe mini = MiniMe(10, 20, 30); 
 ```
 
-For this reason, inside a struct you'll want to use the smallest integer sub-types you can get away with.
+Here, `msg.value` is a way to see how much Ether was sent to the contract, and ether is a built-in unit.
 
-You'll also want to cluster identical data types together (i.e. put them next to each other in the struct) so that Solidity can minimize the required storage space. For example, a struct with fields `uint c; uint32 a; uint32 b;` will cost less gas than a struct with fields `uint32 a; uint c; uint32 b;` because the `uint32` fields are clustered together.
+What happens here is that someone would call the function from web3.js (from the DApp's JavaScript front-end) as follows:
 
-## View functions don't cost gas
-`view` functions don't cost any gas when they're called externally by a user.
+```shell
+// Assuming `OnlineStore` points to your contract on Ethereum:
+OnlineStore.buySomething({from: web3.eth.defaultAccount, value: web3.utils.toWei(0.001)})
+```
 
-This is because `view functions don't actually change anything on the blockchain – they only read the data`. So marking a function with `view` tells `web3.js` that it only needs to query your local Ethereum node to run the function, and it doesn't actually have to create a transaction on the blockchain (which would need to be run on every single node, and cost gas).
+Notice the `value` field, where the javascript function call specifies how much ether to send (0.001). If you think of the transaction like an envelope, and the parameters you send to the function call are the contents of the letter you put inside, then adding a value is like putting cash inside the envelope — the letter and the money get delivered together to the recipient.
 
-> Note: If a `view` function is called internally from another function in the same contract that is `not` a `view` function, it will still `cost gas`. This is because the other function creates a transaction on Ethereum, and will still need to be verified from every node. 
-So `view` functions are only free when they're called externally.
+> Note: If a function is not marked `payable` and you try to send Ether to it as above, the function will reject your transaction.
 
-##  Gas helpful resources
+## Withdraws
+So what happens after you send it?
 
-- [8 general guideline methods on contract optimization](https://medium.com/coinmonks/8-ways-of-reducing-the-gas-consumption-of-your-smart-contracts-9a506b339c0a)
+After you send Ether to a contract, it gets stored in the contract's Ethereum account, and it will be trapped there — unless you add a function to withdraw the Ether from the contract.
 
-- [Profiling Gas Leaks in Solidity Smart Contracts](https://arxiv.org/pdf/2008.05449.pdf)
+You can write a function to `withdraw` Ether from the contract as follows:
 
+```shell
+contract GetPaid is Ownable {
+  function withdraw() external onlyOwner {
+    address payable _owner = address(uint160(owner()));
+    _owner.transfer(address(this).balance);
+  }
+}
+```
+
+> Note that we're using `owner()` and `onlyOwner` from the `Ownable` contract, assuming that was imported.
+
+It is important to note that you cannot transfer Ether to an address unless that address is of type `address payable`. 
+But the `_owner` variable is of type `uint160`, meaning that we must explicitly cast it to `address payable`.
+
+Once you cast the address from `uint160` to `address payable`, you can transfer Ether to that address using the transfer function, and `address(this).balance` will return the total balance stored on the contract. So if 100 users had paid 1 Ether to our contract, `address(this).balance` would equal 100 Ether.
+
+You can use transfer to send funds to any Ethereum address. For example, you could have a function that transfers Ether back to the msg.sender if they overpaid for an item:
+
+
+```shell
+uint itemFee = 0.001 ether;
+msg.sender.transfer(msg.value - itemFee);
+```
+
+Or in a contract with a buyer and a seller, you could save the seller's address in storage, then when someone purchases his item, transfer him the fee paid by the buyer: `seller.transfer(msg.value)`.
 
 # Time Units
 
@@ -555,31 +560,47 @@ function fiveMinutesHavePassed() public view returns (bool) {
 }
 ```
 
+# Random Numbers
 
-# Time Units
+How do we generate random numbers in Solidity?
 
-Solidity provides some `native units` for dealing with `time`.
+The real answer here is, you can't. Well, at least you can't do it safely.
 
-The variable `now` will return the current unix timestamp of the latest block (the number of seconds that have passed since January 1st 1970). The unix time as I write this is 1515527488.
+Let's look at why.
 
-> Note: Unix time is traditionally stored in a 32-bit number. This will lead to the "Year 2038" problem, when 32-bit unix timestamps will overflow and break a lot of legacy systems. So if we wanted our DApp to keep running 20 years from now, we could use a 64-bit number instead — but our users would have to spend more gas to use our DApp in the meantime. Design decisions!
+## Random number generation via `keccak256`
 
-Solidity also contains the time units `seconds, minutes, hours, days, weeks and years`. These will convert to a `uint` of the number of seconds in that length of time.
-So 1 minutes is 60, 1 hours is 3600 (60 seconds x 60 minutes), 1 days is 86400 (24 hours x 60 minutes x 60 seconds), etc.
+The best source of randomness we have in Solidity is the keccak256 hash function.
 
-Here's an example of how these time units can be useful:
+We could do something like the following to generate a random number:
 
 ```shell
-uint lastUpdated;
-
-// Set `lastUpdated` to `now`
-function updateTimestamp() public {
-  lastUpdated = now;
-}
-
-// Will return `true` if 5 minutes have passed since `updateTimestamp` was 
-// called, `false` if 5 minutes have not passed
-function fiveMinutesHavePassed() public view returns (bool) {
-  return (now >= (lastUpdated + 5 minutes));
-}
+// Generate a random number between 1 and 100:
+uint randNonce = 0;
+uint random = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % 100;
+randNonce++;
+uint random2 = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % 100;
 ```
+
+What this would do is take the timestamp of `now`, the `msg.sender`, and an incrementing `nonce` (a number that is only ever used once, so we don't run the same hash function with the same input parameters twice).
+
+It would then "pack" the inputs and use `keccak` to convert them to a random hash. Next, it would convert that hash to a `uint`, and then use `% 100` to take only the last 2 digits. This will give us a totally random number between 0 and 99.
+
+## This method is vulnerable to attack by a dishonest node
+
+In Ethereum, when you call a function on a contract, you broadcast it to a node or nodes on the network as a transaction. The nodes on the network then collect a bunch of transactions, try to be the first to solve a computationally-intensive mathematical problem as a "Proof of Work", and then publish that group of transactions along with their Proof of Work (PoW) as a block to the rest of the network.
+
+Once a node has solved the PoW, the other nodes stop trying to solve the PoW, verify that the other node's list of transactions are valid, and then accept the block and move on to trying to solve the next block.
+
+This makes our random number function **exploitable**.
+
+Let's say we had a coin flip contract — heads you double your money, tails you lose everything. Let's say it used the above random function to determine heads or tails. (`random >= 50` is heads, `random < 50` is tails).
+
+If I were running a node, I could publish a transaction only to my own node and not share it. I could then run the coin flip function to see if I won — and if I lost, choose not to include that transaction in the next block I'm solving. I could keep doing this indefinitely until I finally won the coin flip and solved the next block, and profit.
+
+## So how do we generate random numbers safely in Ethereum?
+
+Because the entire contents of the blockchain are visible to all participants, this is a hard problem, and its solution is beyond the scope of this tutorial. You can read [this StackOverflow thread](https://ethereum.stackexchange.com/questions/191/how-can-i-securely-generate-a-random-number-in-my-smart-contract) for some ideas. One idea would be to use an oracle to access a random number function from outside of the Ethereum blockchain.
+
+Of course, since tens of thousands of Ethereum nodes on the network are competing to solve the next block, my odds of solving the next block are extremely low. It would take me a lot of time or computing resources to exploit this profitably — but if the reward were high enough (like if I could bet $100,000,000 on the coin flip function), it would be worth it for me to attack.
+
