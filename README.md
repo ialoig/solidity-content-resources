@@ -1,6 +1,6 @@
 
 # 📚 Solidity Content & Resources 
-# 📝 Documentation
+## 📝 Documentation
 
 📕 Read the docs: https://docs.soliditylang.org
 
@@ -15,26 +15,24 @@
 - [Payable](https://solidity-by-example.org/payable/)
 - [Fallback](https://solidity-by-example.org/fallback/)
 
-
-# 💡 Helpful Resources
+## 💡 Helpful Resources
 > 🧟 [Crypto Zombies](https://cryptozombies.io/)
 
 > 🦄 [Buildspace](https://buildspace.so/)
 
 
-
-# 🧐 What's inside?
+## 🧐 What's inside?
 
 A quick look at the top-level files and directories you'll see here:
 
-> 📁 contract-samples
+> 📁 [contract-samples](https://github.com/ialoig/solidity-content-resources/tree/master/contracts-samples)
 
 Samples of Solidity contracts projects from around the Blockchain
 
-> 📁 harhat
+> 📁 [harhat](https://github.com/ialoig/solidity-content-resources/tree/master/hardhat)
 
 Hardhat instructions to configure a project.
 
-> 📁 solidity
+> 📁 [solidity](https://github.com/ialoig/solidity-content-resources/tree/master/solidity)
 
 Learning notes about Solidity
