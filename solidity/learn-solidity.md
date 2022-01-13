@@ -1,4 +1,4 @@
-# 🔷 Learning Solidity
+# 🔷 Learning Solidity - part 1
 
 ## Function Declarations
 A function declaration in solidity looks like the following:
@@ -438,7 +438,7 @@ So while there are other ways you can use modifiers, one of the most common use-
 
 In the case of `onlyOwner`, adding this modifier to a function makes it so only the owner of the contract (you, if you deployed it) can call that function.
 
-> Note: Giving the owner special powers over the contract like this is often necessary, but it could also be used maliciously. For example, the owner could add a backdoor function that would allow him to transfer anyone's zombies to himself!
+> Note: Giving the owner special powers over the contract like this is often necessary, but it could also be used maliciously.
 
 > So it's important to remember that just because a DApp is on Ethereum does not automatically mean it's decentralized — you have to actually read the full source code to make sure it's free of special controls by the owner that you need to potentially worry about. There's a careful balance as a developer between maintaining control over a DApp such that you can fix potential bugs, and building an owner-less platform that your users can trust to secure their data.
 
@@ -559,48 +559,3 @@ function fiveMinutesHavePassed() public view returns (bool) {
   return (now >= (lastUpdated + 5 minutes));
 }
 ```
-
-# Random Numbers
-
-How do we generate random numbers in Solidity?
-
-The real answer here is, you can't. Well, at least you can't do it safely.
-
-Let's look at why.
-
-## Random number generation via `keccak256`
-
-The best source of randomness we have in Solidity is the keccak256 hash function.
-
-We could do something like the following to generate a random number:
-
-```shell
-// Generate a random number between 1 and 100:
-uint randNonce = 0;
-uint random = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % 100;
-randNonce++;
-uint random2 = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % 100;
-```
-
-What this would do is take the timestamp of `now`, the `msg.sender`, and an incrementing `nonce` (a number that is only ever used once, so we don't run the same hash function with the same input parameters twice).
-
-It would then "pack" the inputs and use `keccak` to convert them to a random hash. Next, it would convert that hash to a `uint`, and then use `% 100` to take only the last 2 digits. This will give us a totally random number between 0 and 99.
-
-## This method is vulnerable to attack by a dishonest node
-
-In Ethereum, when you call a function on a contract, you broadcast it to a node or nodes on the network as a transaction. The nodes on the network then collect a bunch of transactions, try to be the first to solve a computationally-intensive mathematical problem as a "Proof of Work", and then publish that group of transactions along with their Proof of Work (PoW) as a block to the rest of the network.
-
-Once a node has solved the PoW, the other nodes stop trying to solve the PoW, verify that the other node's list of transactions are valid, and then accept the block and move on to trying to solve the next block.
-
-This makes our random number function **exploitable**.
-
-Let's say we had a coin flip contract — heads you double your money, tails you lose everything. Let's say it used the above random function to determine heads or tails. (`random >= 50` is heads, `random < 50` is tails).
-
-If I were running a node, I could publish a transaction only to my own node and not share it. I could then run the coin flip function to see if I won — and if I lost, choose not to include that transaction in the next block I'm solving. I could keep doing this indefinitely until I finally won the coin flip and solved the next block, and profit.
-
-## So how do we generate random numbers safely in Ethereum?
-
-Because the entire contents of the blockchain are visible to all participants, this is a hard problem, and its solution is beyond the scope of this tutorial. You can read [this StackOverflow thread](https://ethereum.stackexchange.com/questions/191/how-can-i-securely-generate-a-random-number-in-my-smart-contract) for some ideas. One idea would be to use an oracle to access a random number function from outside of the Ethereum blockchain.
-
-Of course, since tens of thousands of Ethereum nodes on the network are competing to solve the next block, my odds of solving the next block are extremely low. It would take me a lot of time or computing resources to exploit this profitably — but if the reward were high enough (like if I could bet $100,000,000 on the coin flip function), it would be worth it for me to attack.
-
