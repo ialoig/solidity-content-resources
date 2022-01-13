@@ -29,6 +29,10 @@ A quick look at the top-level files and directories you'll see here:
 
 Samples of Solidity contracts projects from around the Blockchain
 
+> 📁 [frontend](https://github.com/ialoig/solidity-content-resources/tree/master/frontend)
+
+Learning notes about web3
+
 > 📁 [harhat](https://github.com/ialoig/solidity-content-resources/tree/master/hardhat)
 
 Hardhat instructions to configure a project.
@@ -36,3 +40,4 @@ Hardhat instructions to configure a project.
 > 📁 [solidity](https://github.com/ialoig/solidity-content-resources/tree/master/solidity)
 
 Learning notes about Solidity
+
