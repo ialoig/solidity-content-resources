@@ -16,9 +16,9 @@
 - [Fallback](https://solidity-by-example.org/fallback/)
 
 ## 💡 Helpful Resources
-> 🧟 [Crypto Zombies](https://cryptozombies.io/)
+> 🧟 | [Crypto Zombies](https://cryptozombies.io/)
 
-> 🦄 [Buildspace](https://buildspace.so/)
+> 🦄 | [Buildspace](https://buildspace.so/)
 
 
 ## 🧐 What's inside?
