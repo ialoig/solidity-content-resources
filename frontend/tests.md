@@ -143,3 +143,39 @@ afterEach(async () => {
 - **Lastly**, Truffle will make sure this function is called after a test gets executed.
 
 And voila, the smart contract removed itself!
+
+
+# Time Travelling
+Ganache provides a way to move forward in time through two helper functions:
+
+- `evm_increaseTime`: increases the time for the next block.
+- `evm_mine`: mines a new block.
+You don't even need a Tardis or a DeLorean for this kind of time travel.
+
+Let me explain how these functions work:
+
+- Every time a new block gets mined, the miner adds a timestamp to it. Let's say the transactions that created our zombies got mined in block 5.
+
+- Next, we call `evm_increaseTime` but, since the blockchain is immutable, there is no way of modifying an existing block. So, when the contract checks the time, it will not be increased.
+
+- If we run `evm_mine`, block number 6 gets mined (and timestamped) which means that, when we put the zombies to fight, the smart contract will "see" that a day has passed.
+
+Putting it together, we can fix our test by traveling through time as follows:
+
+```shell
+await web3.currentProvider.sendAsync({
+  jsonrpc: "2.0",
+  method: "evm_increaseTime",
+  params: [86400],  // there are 86400 seconds in a day
+  id: new Date().getTime()
+}, () => { });
+
+web3.currentProvider.send({
+    jsonrpc: '2.0',
+    method: 'evm_mine',
+    params: [],
+    id: new Date().getTime()
+});
+```
+
+> Note: Obviously, time traveling is not available on the main net or on any of the available test chains that are secured by miners. It would make a real mess of things if anyone could just choose to change how time operates in the real world! For testing smart contracts, time travel can be an essential part of the coder's repertoire.
