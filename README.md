@@ -15,6 +15,8 @@
 - [Payable](https://solidity-by-example.org/payable/)
 - [Fallback](https://solidity-by-example.org/fallback/)
 
+📘 [OpenZeppelin Docs](https://docs.openzeppelin.com/openzeppelin)
+
 ## 💡 Helpful Resources - Learn by doing
 > 🧟 | [Crypto Zombies](https://cryptozombies.io/)
 
