@@ -15,7 +15,7 @@
 - [Payable](https://solidity-by-example.org/payable/)
 - [Fallback](https://solidity-by-example.org/fallback/)
 
-## 💡 Helpful Resources
+## 💡 Helpful Resources - Learn by doing
 > 🧟 | [Crypto Zombies](https://cryptozombies.io/)
 
 > 🦄 | [Buildspace](https://buildspace.so/)
@@ -27,11 +27,11 @@ A quick look at the top-level files and directories you'll see here:
 
 > 📁 [contract-samples](https://github.com/ialoig/solidity-content-resources/tree/master/contracts-samples)
 
-Samples of Solidity contracts projects from around the Blockchain
+Solidity contracts of some of the most interesting NFT projects
 
 > 📁 [frontend](https://github.com/ialoig/solidity-content-resources/tree/master/frontend)
 
-Learning notes about web3
+How to make a web page to interact with your Solidity contract
 
 > 📁 [harhat](https://github.com/ialoig/solidity-content-resources/tree/master/hardhat)
 
@@ -39,5 +39,4 @@ Hardhat instructions to configure a project.
 
 > 📁 [solidity](https://github.com/ialoig/solidity-content-resources/tree/master/solidity)
 
-Learning notes about Solidity
-
+From basic to advanced concepts of Solidity programming
