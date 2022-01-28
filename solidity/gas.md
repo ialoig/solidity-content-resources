@@ -14,7 +14,14 @@ Ethereum is like a big, slow, but extremely secure computer. When you execute a 
 
 The creators of Ethereum wanted to make sure someone couldn't clog up the network with an infinite loop, or hog all the network resources with really intensive computations. So they made it so transactions aren't free, and users have to pay for computation time as well as storage.
 
-> Note: This isn't necessarily true for other blockchain, like the ones the CryptoZombies authors are building at Loom Network. It probably won't ever make sense to run a game like World of Warcraft directly on the Ethereum mainnet — the gas costs would be prohibitively expensive. But it could run on a blockchain with a different consensus algorithm. We'll talk more about what types of DApps you would want to deploy on Loom vs the Ethereum mainnet in a future lesson.
+## What is "gwei" or "wei", and how do they relate to ETH?
+`Wei` is the smallest unit of Ether, where 10¹⁸ Wei represents 1 Ether. One gwei is 10⁹ wei, and there are 10⁹ gwei per Ether.
+
+By multiplying the gas price by the gas limit, you'll get the maximum amount of Ether you're willing to spend on gas fees for any particular transaction.
+
+```shell
+Gas Limit X Gas Price = Max Transaction fee (ether)
+```
 
 ## Struct packing to save gas
 In Solidity there are other types of uints: uint8, uint16, uint32, etc.
