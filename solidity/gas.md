@@ -1,5 +1,8 @@
 # ⛽ Gas
 
+## 🔗 Useful links
+- [the-gas-efficient-way-of-building-and-launching-an-erc721-nft-project](https://nftchance.medium.com/the-gas-efficient-way-of-building-and-launching-an-erc721-nft-project-for-2022-b3b1dac5f2e1)
+
 
 ## Gas — the fuel Ethereum DApps run on
 In Solidity, your users have to pay every time they execute a function on your DApp using a currency called `gas`. Users buy gas with Ether (the currency on Ethereum), so your users have to spend ETH in order to execute functions on your DApp.
