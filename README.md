@@ -1,8 +1,9 @@
 
-# 📚 Solidity Content & Resources 
+# 📚 Solidity Content & Resources
+
 ## 📝 Documentation
 
-📕 Read the docs: https://docs.soliditylang.org
+📕 Read the docs: <https://docs.soliditylang.org>
 
 📙 [Solidity by example](https://solidity-by-example.org)
 
@@ -18,10 +19,12 @@
 📘 [OpenZeppelin Docs](https://docs.openzeppelin.com/openzeppelin)
 
 ## 💡 Helpful Resources - Learn by doing
+
 > 🧟 | [Crypto Zombies](https://cryptozombies.io/)
 
 > 🦄 | [Buildspace](https://buildspace.so/)
 
+> 🛠 | [useWeb3](https://www.useweb3.xyz/)
 
 ## 🧐 What's inside?
 
