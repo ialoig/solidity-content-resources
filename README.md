@@ -22,9 +22,11 @@
 
 > 🧟 | [Crypto Zombies](https://cryptozombies.io/)
 
-> 🦄 | [Buildspace](https://buildspace.so/)
-
 > 🛠 | [useWeb3](https://www.useweb3.xyz/)
+
+> 🔷 | [LearnWeb3](https://learnweb3.io/)
+
+> 🔰 | [Web3 University](https://www.web3.university/)
 
 ## 🧐 What's inside?
 
